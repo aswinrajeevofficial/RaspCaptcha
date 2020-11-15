@@ -12,6 +12,7 @@ import random
 import argparse
 import tensorflow as tf
 import tensorflow.keras as keras
+import time
 
 def decode(characters, y):
     y = numpy.argmax(numpy.array(y), axis=2)[:,0]
@@ -44,7 +45,7 @@ def main():
     symbols_file = open(args.symbols, 'r')
     captcha_symbols = symbols_file.readline().strip()
     symbols_file.close()
-
+    start_time = time.time()
     print("Classifying captchas with symbol set {" + captcha_symbols + "}")
 
     with tf.device('/cpu:0'):
@@ -66,9 +67,10 @@ def main():
                 (c, h, w) = image.shape
                 image = image.reshape([-1, c, h, w])
                 prediction = model.predict(image)
-                output_file.write(x + ", " + decode(captcha_symbols, prediction) + "\n")
-
+                predictString = decode(captcha_symbols,prediction)
+                predictString = predictString.replace(" ", "")
+                output_file.write(x + "," + predictString + "\n")
                 print('Classified ' + x)
-
+    print("--- %s seconds ---" % (time.time() - start_time))
 if __name__ == '__main__':
     main()

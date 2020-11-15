@@ -11,6 +11,7 @@ import string
 import random
 import argparse
 import tflite_runtime.interpreter as tflite
+import time
 
 def decode(characters, y):
     y = numpy.argmax(numpy.array(y), axis=2)[:,0]
@@ -38,7 +39,7 @@ def main():
     symbols_file = open(args.symbols, 'r')
     captcha_symbols = symbols_file.readline().strip()
     symbols_file.close()
-    
+    start_time = time.time()
     print("Classifying captchas with symbol set {" + captcha_symbols + "}")
     with open(args.output, 'w') as output_file:
         interpreter = tflite.Interpreter(model_path="model.tflite")
@@ -62,6 +63,7 @@ def main():
             predictString = decode(captcha_symbols,prediction)
             predictString = predictString.replace(" ", "")
             output_file.write(x + "," + predictString + "\n")
-            print('TFLite Classified ' + x)
+            print('TFLite Classified ' + x)    
+    print("--- %s seconds ---" % (time.time() - start_time))
 if __name__ == '__main__':
     main()
