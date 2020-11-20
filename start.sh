@@ -1,5 +1,7 @@
 #!/bin/sh
+source aswin_venv/bin/activate
 echo "Virtual environment activated"
+cd aswin_venv
 echo "Installing dependencies"
 pip3 install https://github.com/google-coral/pycoral/releases/download/release-frogfish/tflite_runtime-2.5.0-cp38-cp38-linux_armv7l.whl
 pip install opencv-python
@@ -24,3 +26,4 @@ else
   git push https://github.com/aswinrajeevofficial/RaspCaptcha.git
   exit 1
 fi
+deactivate
